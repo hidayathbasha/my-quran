@@ -129,6 +129,12 @@ var Quran = {
     "Al-Ikhlas",
     "Al-Falaq",
     "An-Nas"],  
+	
+	translation: "en.yusufali",
+	
+	hasTranslationForSurah: false,
+	
+	selectedSurahTranslation: undefined,
 
 	init: function(){
 		Quran.populateSurahList();
@@ -158,6 +164,9 @@ var Quran = {
 			var opt = $("<option/>");
 			$(opt).val(num).text(num).appendTo($("#toVerse"));
 		}
+		
+		Quran.hasTranslationForSurah = false;
+		Quran.getTranslation($('#sura').val());
 	},
 
 	writeAayah: function(){
@@ -177,6 +186,7 @@ var Quran = {
 		for(var ayah = fromAayah; ayah <= toAayah; ayah++){
 			var img = $("<img/>");
 			$(img).attr("src", "http://www.everyayah.com/data/quranpngs/" + surah + "_" + ayah + ".png");
+			Quran.setTranslation($(img), surah, ayah);
 			$(img).appendTo($("#aayaah"));
 		}
 		
@@ -187,6 +197,32 @@ var Quran = {
 		$('#fromVerse, #toVerse').empty();
 		$('#aayaah').empty();
 		$('#showingStatus').text("");
+	},
+	
+	getTranslation: function(surah){
+		
+		if(!Quran.hasTranslationForSurah){
+			$.getJSON("http://api.globalquran.com/surah/" + surah + "/" + Quran.translation, {
+			}, function(resp){
+				//$(elem).attr("title", resp['quran'][translation][aayah]["verse"]);
+				Quran.selectedSurahTranslation = resp;
+				Quran.hasTranslationForSurah = true;
+			});
+		}
+		else {
+			//$(elem).attr("title", Quran.selectedSurahTranslation['quran'][translation][aayah]["verse"]);
+		}
+	},
+	
+	setTranslation: function(elem, surah, aayah){
+		if(Quran.hasTranslationForSurah){
+			$.each(Quran.selectedSurahTranslation['quran'][Quran.translation], function(iter, eAayah){
+				if(eAayah["ayah"] == aayah){
+					$(elem).attr("title",  eAayah["verse"]);
+					return false;
+				}
+			});
+		}
 	}
 };
 
