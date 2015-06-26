@@ -128,15 +128,18 @@ var Quran = {
     "Al-Masad",
     "Al-Ikhlas",
     "Al-Falaq",
-    "An-Nas"],  
+    "An-Nas"],
+
+	translations: ["en.yusufali", "en.pickthall", "en.shakir"],	
 	
-	translation: "en.yusufali",
+	translation: undefined,
 	
 	hasTranslationForSurah: false,
 	
 	selectedSurahTranslation: undefined,
 
 	init: function(){
+		Quran.translation = Quran.translations[1];
 		Quran.populateSurahList();
 		Quran.populateVersesList();
 	},
