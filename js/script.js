@@ -141,35 +141,51 @@ var Quran = {
 	init: function(){
 		Quran.translation = Quran.translations[1];
 		Quran.populateSurahList();
-		Quran.populateVersesList();
+		/*Quran.populateVersesList();*/
 	},
 	
 	populateSurahList: function(){
 		var surahNames = Quran.surahNames;
 		
 		for(var num = 0; num < 114; num++){
-			var opt = $("<option/>");
-			$(opt).val((num + 1)).text(surahNames[num]).appendTo($("#sura"));
+			/*var opt = $("<option/>");
+			$(opt).val((num + 1)).text(surahNames[num]).appendTo($("#sura"));*/
+			
+			var li = $("<li/>");
+			$(li).html("<a href=\"#\" data='" + (num + 1) + "'>" + surahNames[num] + "</a>").addClass("pull-left");
+			$(li).appendTo($("#sura").parent().find("ul"));
 		}
+		
+		$('#sura').parent().find('ul > li > a').click(Quran.populateVersesList);
 	},
 	
-	populateVersesList: function(){
-		var maxVerse = Quran.verses[$('#sura').val() - 1];
+	populateVersesList: function(event){
+		var selectedSurahNo = $(event.target).attr("data");
+		var maxVerse = Quran.verses[selectedSurahNo - 1];
 		
 		Quran.resetAll();
 	
 		for(var num = 1; num <= maxVerse; num++){
-			var opt = $("<option/>");
-			$(opt).val(num).text(num).appendTo($("#fromVerse"));
+			/*var opt = $("<option/>");
+			$(opt).val(num).text(num).appendTo($("#fromVerse"));*/
+			
+			var li = $("<li/>");
+			$(li).html("<a href=\"#\">" + num + "</a>").addClass("pull-left");
+			$(li).appendTo($("#fromVerse").parent().find("ul"));
+			
 		}
 		
 		for(var num = 1; num <= maxVerse; num++){
-			var opt = $("<option/>");
-			$(opt).val(num).text(num).appendTo($("#toVerse"));
+			/*var opt = $("<option/>");
+			$(opt).val(num).text(num).appendTo($("#toVerse"));*/
+			
+			var li = $("<li/>");
+			$(li).html("<a href=\"#\">" + num + "</a>").addClass("pull-left");
+			$(li).appendTo($("#toVerse").parent().find("ul"));
 		}
 		
 		Quran.hasTranslationForSurah = false;
-		Quran.getTranslation($('#sura').val());
+		Quran.getTranslation(selectedSurahNo);
 	},
 
 	writeAayah: function(){
@@ -197,7 +213,9 @@ var Quran = {
 	},
 	
 	resetAll: function(){
-		$('#fromVerse, #toVerse').empty();
+		/*$('#fromVerse, #toVerse').empty();*/
+		$('#fromVerse').parent().find('ul').empty();
+		$('#toVerse').parent().find('ul').empty();
 		$('#aayaah').empty();
 		$('#showingStatus').text("");
 	},
@@ -226,14 +244,18 @@ var Quran = {
 				}
 			});
 		}
-	}
+	},
+	
+	fromVerseClickHandler: function(){}
 };
 
 
  
 $(document).ready(function(){
 	Quran.init();
-	$('#sura').change(Quran.populateVersesList);
+	/*$('#sura').change(Quran.populateVersesList);*/
+	
+	
 	$('#toVerse').change(Quran.writeAayah);
 });
 
